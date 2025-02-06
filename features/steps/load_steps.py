@@ -50,3 +50,16 @@ def step_impl(context):
         #
         # ADD YOUR CODE HERE TO CREATE PRODUCTS VIA THE REST API
         #
+        product_data = {
+            "name":        row["name"],
+            "description": row["description"],
+            "price":       row["price"],                   # The service will convert string -> Decimal
+            "available":   row["available"].lower() == "true",
+            "category":    row["category"]
+        }
+
+        # POST to create each product
+        context.resp = requests.post(rest_endpoint, json=product_data)
+        assert context.resp.status_code == HTTP_201_CREATED, (
+            f"Could not create product: {context.resp.text}"
+        )

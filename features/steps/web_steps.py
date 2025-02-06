@@ -105,6 +105,49 @@ def step_impl(context, element_name):
 ##################################################################
 
 ## UPDATE CODE HERE ##
+##################################################################
+# Button Click Step
+##################################################################
+@when('I press the "{button}" button')
+def step_impl(context, button):
+    """ Click a button whose id is <button>-btn """
+    button_id = button.lower() + '-btn'
+    context.driver.find_element(By.ID, button_id).click()
+
+##################################################################
+# Checking presence of text in 'search_results'
+##################################################################
+@then('I should see "{name}" in the results')
+def step_impl(context, name):
+    """ Wait until 'name' appears in the element with id='search_results' """
+    found = WebDriverWait(context.driver, context.wait_seconds).until(
+        expected_conditions.text_to_be_present_in_element(
+            (By.ID, 'search_results'),
+            name
+        )
+    )
+    assert found, f"Expected to see '{name}' in the search results, but did not."
+
+@then('I should not see "{name}" in the results')
+def step_impl(context, name):
+    """ Check that 'name' does NOT appear in the element with id='search_results' """
+    element = context.driver.find_element(By.ID, 'search_results')
+    assert name not in element.text, f"Did NOT expect to see '{name}' in the search results."
+
+##################################################################
+# Checking for a message in the flash_message area
+##################################################################
+@then('I should see the message "{message}"')
+def step_impl(context, message):
+    """ Wait until 'message' appears in the element with id='flash_message' """
+    found = WebDriverWait(context.driver, context.wait_seconds).until(
+        expected_conditions.text_to_be_present_in_element(
+            (By.ID, 'flash_message'),
+            message
+        )
+    )
+    assert found, f"Expected to see message '{message}' but did not."
+
 
 ##################################################################
 # This code works because of the following naming convention:
